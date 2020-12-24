@@ -8,7 +8,7 @@ networks:
 
 services:
   backend:
-    image: imatch/backend
+    image: dhip-purge-data/backend
     restart: unless-stopped
     depends_on:
       - mssql
