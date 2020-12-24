@@ -1,0 +1,47 @@
+version: '3.6'
+
+networks:
+  frontend:
+    driver: bridge
+  backend:
+    driver: bridge
+
+services:
+  backend:
+    image: imatch/backend
+    restart: unless-stopped
+    depends_on:
+      - mssql
+    ports:
+      - 8135:8080
+    networks:
+      - backend
+      - frontend
+    environment:
+      DB_HOST: mssql
+      DB_USER: sa
+      DB_PASSWORD: "123qwe!@#"
+
+  mssql:
+    image: mcr.microsoft.com/mssql/server:2017-latest-ubuntu
+    environment:
+      SA_PASSWORD: "123qwe!@#"
+      ACCEPT_EULA: Y
+      MSSQL_PID: Express
+      TZ: Asia/Bangkok
+    networks:
+      - backend
+    restart: always
+    ports:
+      - 0.0.0.0:1455:1433
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "2"
+
+#volumes:
+#  app-storage:
+#    external: true
+
+#docker volume create --name app-storage --opt type=none --opt device=/data/storage --opt o=bind
